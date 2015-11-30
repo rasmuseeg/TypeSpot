@@ -1,0 +1,5 @@
+C:\Repositories\Typespot\Typespot.Test\bin\Debug\Typespot.Test.dll
+C:\Repositories\Typespot\Typespot.Test\bin\Debug\Typespot.Test.pdb
+C:\Repositories\Typespot\Typespot.Test\obj\Debug\Typespot.Test.csprojResolveAssemblyReference.cache
+C:\Repositories\Typespot\Typespot.Test\obj\Debug\Typespot.Test.dll
+C:\Repositories\Typespot\Typespot.Test\obj\Debug\Typespot.Test.pdb

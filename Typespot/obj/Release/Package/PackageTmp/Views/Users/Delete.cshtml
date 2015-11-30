@@ -1,0 +1,58 @@
+﻿@model Typespot.Models.UserViewModel
+
+@{
+  ViewBag.Title = "Slet " + Model.FullName;
+}
+
+<div class="page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h2>Slet permanent</h2>
+        <p class="alert alert-danger">
+          <strong>Obs!</strong>
+          Dette vil slette alle data denne bruger har oprettet.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="body-content">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div>
+          <h4>Bruger</h4>
+          <hr />
+          <div class="media">
+            <div class="media-left">
+              @if (!String.IsNullOrEmpty(Model.ImageUrl))
+              {
+                <img src="@Model.ImageUrl?width=32&height=32&mode=crop" class="img-avatar" />
+              }
+            </div>
+            <div class="media-body">
+              <strong>@Html.DisplayFor(model => model.FullName)</strong>
+              <p>
+                @Html.DisplayFor(model => model.Email)
+              </p>
+            </div>
+          </div>
+          <br />
+          <br />
+          @using (Html.BeginForm())
+          {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+              <a href="@Url.Action("Details", new { id=Model.Id })">Tilbage til bruger detaljer</a>
+              <input type="submit" value="Slet" class="btn btn-danger pull-right" />
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

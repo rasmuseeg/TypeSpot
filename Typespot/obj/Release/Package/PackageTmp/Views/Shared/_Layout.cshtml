@@ -1,0 +1,86 @@
+﻿@{
+    Html.RequiresCssBundle( "bootstrap");
+
+    Html.RequiresJsBundle( "jquery" );
+    Html.RequiresJsBundle( "bootstrap" );
+    Html.RequiresJsBundle( "angular" );
+
+    Html.RequiresJs( "~/Scripts/lib/moment/moment-with-locales.min.js" );
+
+    Html.RequiresJsBundle( "core" );
+
+    @* Load all anuglar last *@
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title | Typespot</title>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:500,400italic,100,300,700,400' rel='stylesheet' type='text/css'>
+    @Html.RenderCssHere()
+</head>
+<body ng-app="app">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink( "Typespot", "Index", "Spot", new { area = "" }, new { @class = "navbar-brand" } )
+            </div>
+            @if( Request.IsAuthenticated ) { 
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav text-uppercase nav-pages">
+                    <li class="@LinkActive("Index", "Spot")"><a href="@Url.Action("Index", "Spot")"><span class="glyphicon glyphicon-send"></span>&nbsp;Spot</a></li>
+                    <li class="@LinkActive( "Index", "Reports" )"><a href="@Url.Action( "Index", "Reports" )"><span class="glyphicon glyphicon-stats"></span>&nbsp;Reports</a></li>
+                    <li class="@LinkActive( "Index", "Users" )"><a href="@Url.Action( "Index", "Users" )"><span class="glyphicon glyphicon-user"></span>&nbsp;Users</a></li>
+                </ul>
+                @Html.Partial( "_LoginPartial" )
+            </div>
+            }
+        </div>
+    </div>
+
+    @RenderBody()
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-left">
+                    <br />
+                    <small class="text-muted"><a href="mailto:rem@ewis.dk">Brug for hjælp?</a> </small>
+                </div>
+                <div class="col-md-6 text-right">
+                    <br />
+                    <small class="text-muted">&copy; @DateTime.Now.Year Rasmus Eeg Møller</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @Html.RenderJsHere()
+
+    <script>
+        moment.locale('da-DK');
+    </script>
+
+    @RenderSection( "scripts", required: false )
+</body>
+</html>
+
+@functions{
+    public string LinkActive ( string Action, string Controller )
+    {
+        string strAction = ViewContext.RouteData.Values["action"] + "";
+        string strController = ViewContext.RouteData.Values["controller"] + "";
+
+        if(strAction == Action && strController == Controller )
+            return "active";
+
+        return "";
+    } 
+}

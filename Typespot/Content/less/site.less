@@ -1,0 +1,88 @@
+﻿@import "bootstrap/bootstrap.less";
+@import (reference) 'bootstrap/variables.less'; 
+
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color: @gray-lighter;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding: @line-height-computed 15px;
+    background-color: #fff;
+    border-top: 1px solid darken(@gray-lighter, 5%);
+    border-bottom: 1px solid darken(@gray-lighter, 5%);
+    min-height: 140px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* Angular anchor clicks */
+a[ng-click]{
+    cursor: pointer;
+}
+
+@media (min-width: @screen-sm){
+    .nav-pages{
+        position: absolute;
+        left: 50%;
+        margin-left: -125px;
+    }
+}
+
+
+.user-row{
+    display: block;
+    padding: 10px 0;
+    color: inherit;
+
+    &:hover{
+        background-color: @gray-lighter;
+
+        .img-avatar{
+            border-color: #fff;
+        }
+    }
+}
+
+.user-day{
+    hr{
+        margin-top: 0;
+        border-top-width: 3px;
+    }
+}
+
+.img-avatar {
+    border: 3px solid  @gray-lighter;
+    background-color: #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.fa-spin-custom, .glyphicon-spin {
+  -webkit-animation: spin 1000ms infinite linear;
+  animation: spin 1000ms infinite linear;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}

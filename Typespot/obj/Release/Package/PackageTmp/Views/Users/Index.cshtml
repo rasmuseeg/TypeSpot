@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Typespot.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Users";
+    Html.RequiresJs( "~/Scripts/Controllers/users.controller.js", 105 );
+}
+
+<div ng-controller="UsersController">
+    <div class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <p>
+                        <button class="btn btn-default" ng-class="{'btn-default': !auto, 'btn-success': auto}" ng-click="toggleAuto()"><span class="glyphicon glyphicon-refresh"></span> Automatisk</button>
+                        <span class="text-muted"><span ng-bind="label">10</span></span>
+                    </p>
+                </div>
+                @*<div class="col-xs-4">
+                    <p class="text-center">
+                        <!-- Single button -->
+                        <div class="btn-group" dropdown is-open="status.isopen">
+                            <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+                                Button dropdown <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li ng-class="{active: usersFilter == 'active'}"><a href="#" ng-model="usersFilter" btn-radio="'active'">Aktive brugere</a></li>
+                                <li ng-class="{active: usersFilter == 'active'}"><a href="#" ng-model="usersFilter" btn-radio="'deleted'">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                            </ul>
+                        </div>
+                    </p>
+                </div>*@
+                <div class="col-xs-6">
+                    <p class="pull-right">
+                        <a class="btn btn-success" href="@Url.Action("Create")">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Inviter Ny Bruger
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="body-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8 col-xs-offset-2">
+                    <a href="/Users/Details?id={{user.Id}}" class="row user-row repeated-item" ng-repeat=" user in users | orderObjectBy:'LastEntry':true">
+                        <div class="media col-xs-6">
+                            <div class="media-left">
+                                <img ng-if="user.ImageUrl == null" ng-src="//placehold.it/48" alt="{{user.FullName}}" class="img-avatar">
+                                <img ng-if="user.ImageUrl.length > 0" ng-src="{{user.ImageUrl}}" style="width: 40px;height: 40px;" alt="{{user.FullName}}" class="img-avatar">
+                            </div>
+                            <div class="media-body">
+                                <strong class="media-heading"><span ng-bind="user.FullName">John Doe</span></strong><br />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="col-xs-6">
+                                <span ng-bind="user.ReportsCount"></span> rapporter
+                            </div>
+                            <div class="col-xs-6">
+                                <span>Sidste rapport: </span><br />
+                                <abbr ng-if="user.LastEntry == null" title="Brugeren har endnu ikke lave én rapport">aldrig</abbr>
+                                <abbr ng-if="user.LastEntry !== null" title="{{user.LastEntry | dateTime}}" ng-bind="user.LastEntry | calendar"></abbr>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

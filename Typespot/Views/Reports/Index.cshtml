@@ -1,0 +1,187 @@
+﻿@model IEnumerable<Typespot.Models.ReportsByUser>
+
+@{
+    ViewBag.Title = "Spot oversigt";
+
+    Html.RequiresJs( "~/Scripts/Controllers/report-edit-modal.controller.js", 100);
+    Html.RequiresJs("~/Scripts/Controllers/report-actions.controller.js", 101);
+    Html.RequiresJs("~/Scripts/Controllers/reports-list.controller.js", 102);
+
+    Html.RequiresCss("~/Scripts/lib/datepicker/css/datepicker.css");
+}
+<div ng-controller="ListReportsController" ng-init="isSuperuser = @Html.Raw(User.IsInRole("Superusers").ToString().ToLower())">
+    <div class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <div class="input-group" style="width: 140px;">
+                                <input type="text" datepicker-popup="{{'dd-MM-yyyy'}}"
+                                       class="form-control"
+                                       datepicker-options="dates.dateOptions"
+                                       ng-model="model.dateFrom"
+                                       ng-required="true"
+                                       is-open="dates.from.open"
+                                       max-date="model.dateTo" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="dates.from.toggle($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <small class="text-muted text-uppercase">&nbsp;&nbsp; Til &nbsp;&nbsp;</small>
+                        <div class="form-group">
+                            <div class="input-group" style="width: 140px;">
+                                <input type="text" datepicker-popup="{{'dd-MM-yyyy'}}"
+                                       class="form-control"
+                                       datepicker-options="dates.dateOptions"
+                                       ng-model="model.dateTo"
+                                       ng-required="true"
+                                       is-open="dates.to.open"
+                                       min-date="model.dateFrom" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="dates.to.toggle($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="isSuperuser">
+                            &nbsp;&nbsp;
+                            <small class="text-muted text-uppercase">Vis slettet: </small>
+                            <button class="btn btn-link" ng-click="toggleTrashed()">
+                                <span ng-if="model.includeTrashed">Ja</span>
+                                <span ng-if="!model.includeTrashed">Nej</span>
+                            </button>
+                        </div>
+
+                        <div class="form-group pull-right has-feedback">
+                            <input type="text" class="form-control" id="inputSuccess4" aria-describedby="inputSuccess4Status" placeholder="Filter page results..." ng-model="searchText.$">
+                            <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputSuccess4Status" class="sr-only">(search)</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <br />
+                    <span class="text-muted">
+                        Viser
+                        <input type="number" class="form-control input-sm" style="width: 60px;display: inline;float: none;"
+                               min="10"
+                               max="200"
+                               ng-required="true"
+                               ng-model="model.itemsPerPage" /> af <span ng-bind="totalItems">0</span> resultater.
+                    </span>
+
+                    @*<a class="btn btn-link" href="@Url.Action("Create", "Reports")"><span class="glyphicon glyphicon-plus"></span> Opret ny Spot</a>*@
+                    <a class="btn btn-link" href="/Reports/Export?dateFrom={{dates.from.format()}}&dateTo={{dates.to.format()}}"><span class="glyphicon glyphicon-download"></span> Hent som Excel</a>
+
+                    <!-- User dropdown -->
+                    <div class="form-group pull-right">
+                        &nbsp;
+                        <div class="dropdown" style="display: inline-block;">
+                            <a href="" class="btn btn-default dropdown-toggle" type="button" id="dropdownUsers" data-toggle="dropdown" aria-expanded="false">
+                                <span ng-if="selectedUser == null">Alle brugere</span>
+                                <span ng-if="selectedUser != null">
+                                    <img class="img-responsive img-circle" style="display: inline;"
+                                         ng-src="//www.gravatar.com/avatar/{{users[selectedUser].GravatarHash}}.jpg?s=20" />
+                                    <span ng-bind="users[selectedUser].FullName"></span>
+                                </span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownUsers">
+                                <li ng-if="selectedUser != null">
+                                    <a href="#" ng-click="selectUser();">Alle brugere</a>
+                                </li>
+                                <li role="presentation" ng-repeat="user in users track by $index | orderBy:'FullName'"
+                                    ng-class="{active: selectedUser == $index}">
+                                    <a role="menuitem" tabindex="-{{$index}}" href="#" ng-click="selectUser($index);">
+                                        <img class="img-responsive img-circle" style="display: inline;"
+                                             ng-src="//www.gravatar.com/avatar/{{user.GravatarHash}}.jpg?s=20" />
+                                        {{user.FullName}} <span class="badge" ng-bind="user.Count"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="body-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <br />
+                    <p class="pull-right">
+                        <pagination total-items="totalItems" items-per-page="model.itemsPerPage" ng-model="model.currentPage" max-size="7" class="pagination-sm" boundary-links="true"></pagination>
+                    </p>
+                    <p class="pull-left" ng-if="isSuperuser">
+                        <span class="label label-danger">Slettet</span>
+                        <span class="label label-info">Redigerét</span>
+                    </p>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                @*<th></th>*@
+                                <th>#</th>
+                                <th>Type</th>
+                                <th>Kunde</th>
+                                <th>Navn</th>
+                                <th>Oprettet</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="min-height: 30px;" class="repeated-item"
+                                ng-repeat="report in reports | filter:searchText:false"
+                                ng-class="{danger: report.Trashed, info: report.UpdateDate != null}">
+                                @*<td>
+                                        <span data-toggle="tooltip" data-placement="top" title="Tooltip on top"><img class="img-responsive img-circle" ng-src="{{report.Personality.Url}}" /></span>
+                                    </td>*@
+                                <td><strong ng-bind="report.Personality.Type" style=" font-size: 2.9em; line-height: 1em;"></strong></td>
+                                <td class="col-md-4">
+                                    <span ng-bind="report.Personality.Name"></span>
+                                    <br />
+                                    <small class="text-muted" ng-bind="report.Message"></small>
+                                </td>
+                                <td ng-bind="report.Customer"></td>
+                                <td ng-bind="report.User.FullName"></td>
+                                <td>
+                                    <abbr title="{{report.CreateDate | dateFormat}}" ng-bind="report.CreateDate | calendar"></abbr>
+                                </td>
+                                <td>
+                                    <div class="dropdown pull-right" ng-controller="ReportActionsController">
+                                        <button class="btn btn-link" id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Actions
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel">
+                                            <li ng-if="!report.Trashed"><a href="#" ng-click="edit(report.Id, $index)" data-toggle="tooltip" data-placement="top" title="Rediger" data-selector="body"><span class="glyphicon glyphicon-edit"></span> Rediger</a></li>
+                                            <li ng-if="!report.Trashed"><a href="#" ng-click="trash(report.Id, $index)" data-toggle="tooltip" data-placement="top" title="Slet" data-selector="body"><span class="glyphicon glyphicon-trash"></span> Slet</a></li>
+                                            <li ng-if="report.Trashed"><a href="#" ng-click="restore(report.Id, $index)" data-toggle="tooltip" data-placement="top" title="Gendan" data-selector="body"><span class="glyphicon glyphicon-refresh"></span> Gendan</a></li>
+                                            <li ng-if="isSuperuser && report.Trashed"><a href="#" ng-click="delete(report.Id, $index)" data-toggle="tooltip" data-placement="top" title="Slet permanent" data-selector="body"><span class="glyphicon glyphicon-remove"></span> Slet permanent</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <p class="pull-right">
+                        <pagination total-items="totalItems" items-per-page="model.itemsPerPage" ng-model="model.currentPage" max-size="7" class="pagination-sm" boundary-links="true"></pagination>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

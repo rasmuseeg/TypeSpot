@@ -1,0 +1,21 @@
+﻿@model string
+@{ 
+   Html.RequiresJs("~/Scripts/lib/bootstrap/bootstrap-wysiwyg.js", 101);
+   Html.RequiresJs("~/Scripts/Directives/wysiwyg.directive.js", 102);
+}
+<div class="btn-toolbar" data-role="editor-toolbar" data-target="#wysiwyg-@Html.IdFor(model => Model)">
+    <div class="btn-group">
+        <a class="btn" data-edit="bold" title="" data-original-title="Bold (Ctrl/Cmd+B)"><span class="glyphicon glyphicon-bold"></span></a>
+        <a class="btn" data-edit="italic" title="" data-original-title="Italic (Ctrl/Cmd+I)"><span class="glyphicon glyphicon-italic"></span></a>
+        <a class="btn" data-edit="strikethrough" title="" data-original-title="Strikethrough"><span class="glyphicon glyphicon-font"></span></a>
+        <a class="btn" data-edit="underline" title="" data-original-title="Underline (Ctrl/Cmd+U)"><span class="glyphicon glyphicon-font"></span></a>
+    </div>
+    <div class="btn-group">
+        <a class="btn" data-edit="insertunorderedlist" title="" data-original-title="Bullet list"><span class="glyphicon glyphicon-list-alt"></span></a>
+        <a class="btn" data-edit="insertorderedlist" title="" data-original-title="Number list"><i class="glyphicon glyphicon-list"></i></a>
+        <a class="btn" data-edit="outdent" title="" data-original-title="Reduce indent (Shift+Tab)"><i class="glyphicon glyphicon-indent-left"></i></a>
+        <a class="btn" data-edit="indent" title="" data-original-title="Indent (Tab)"><i class="glyphicon glyphicon-indent-right"></i></a>
+    </div>
+</div>
+<div wysiwyg id="wysiwyg-@Html.IdFor(model => Model)" data-target="#@Html.IdFor(model => Model)" class="form-control">@Html.Raw( Model )</div>
+@Html.HiddenFor(model => Model)

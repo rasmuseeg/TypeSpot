@@ -1,0 +1,233 @@
+﻿@model Typespot.Models.HomeViewModel
+@{
+    ViewBag.Title = "Spot!";
+
+    Html.RequiresJs( "~/Scripts/Controllers/report-edit-modal.controller.js", 101 );
+    Html.RequiresJs( "~/Scripts/Controllers/report-actions.controller.js", 102 );
+    Html.RequiresJs( "~/Scripts/Controllers/spot.controller.js", 103 );
+}
+
+<div ng-controller="SpotController">
+    <div class="page-header">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-xs-6">
+                    <div class="pull-right no-margin text-right">
+                        <small class="text-uppercase text-muted">I dag</small>
+                        <div class="h1 text-right no-margin">
+                            <strong ng-bind="model.TotalToday">0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-6">
+                    <div class="text-left">
+                        <small class="text-uppercase text-muted"> I alt</small>
+                        <div class="h1 text-left no-margin">
+                            <span ng-bind="model.TotalReports">0</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="body-content">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h5><strong>De tre centre</strong></h5>
+                        <img ng-hide="spotTonality" ng-src="http://ewis.dk{{getImage('Center')}}" class="img-responsive" style="display: inline-block;" />
+                        <img ng-hide="!spotTonality" ng-src="http://ewis.dk{{getImage('Tonality')}}" class="img-responsive" style="display: inline-block;" />
+                        <br />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h5><strong>Første forsvar</strong></h5>
+                        <img ng-src="http://ewis.dk{{getImage('HarmonicGroup')}}" class="img-responsive" style="display: inline-block;" />
+                        <br />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h5><strong>Andet forsvar</strong></h5>
+                        <img ng-src="http://ewis.dk{{getImage('SocialStyle')}}" class="img-responsive" style="display: inline-block;" />
+                        <br />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <h1 ng-repeat="personality in personalities | orderBy:'Type':false">
+                        <span>
+                            <span ng-bind="personality.Type"></span>
+                            <small ng-bind="personality.Name"></small>
+                        </span>
+                    </h1>
+                    <p class="text-muted"
+                       ng-show="personalities.length == 1" ng-bind-html="personalities[0].Description"></p>
+                    <small class="text-muted" ng-show="personalities.length == 1">
+                        <span ng-bind="personalities[0].Center.Name"></span> /
+                        <span ng-bind="personalities[0].Tonality.Name"></span> /
+                        <span ng-bind="personalities[0].HarmonicGroup.Name"></span> /
+                        <span ng-bind="personalities[0].SocialStyle.Name"></span>
+                    </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+
+                    <div class="form-group" ng-show="!spotTonality">
+                        <div class="list-group">
+                            <a href="#" ng-repeat="obj in model.Centers"
+                               ng-class="classes('Center', obj.Id)"
+                               ng-click="select('Center', obj.Id, $index);"
+                               class="list-group-item">
+                                <h4 class="list-group-item-heading" ng-bind="obj.Name"></h4>
+                            </a>
+                            <div class="list-group-item disabled">
+                                <p class="list-group-item-text" ng-bind-html="getDescription('Center')"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-show="spotTonality">
+                        <div class="list-group">
+                            <a href="#" ng-repeat="obj in model.Tonalities"
+                               ng-class="classes('Tonality', obj.Id)"
+                               ng-click="select('Tonality', obj.Id, $index);"
+                               class="list-group-item">
+                                <h4 class="list-group-item-heading" ng-bind="obj.Name"></h4>
+                            </a>
+                            <div class="list-group-item disabled">
+                                <p class="list-group-item-text" ng-bind-html="getDescription('Tonality')"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <a href="#" ng-click="toggleSpot()">
+                            <span ng-hide="!spotTonality">Tonaliteter?</span>
+                            <span ng-hide="spotTonality">De tre center?</span>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="list-group">
+                            <a href="#" ng-repeat="obj in model.HarmonicGroups"
+                               ng-class="classes('HarmonicGroup', obj.Id)"
+                               ng-click="select('HarmonicGroup', obj.Id, $index);"
+                               class="list-group-item">
+                                <h4 class="list-group-item-heading" ng-bind="obj.Name"></h4>
+                            </a>
+                            <div class="list-group-item disabled">
+                                <p class="list-group-item-text" ng-bind-html="getDescription('HarmonicGroup')"></p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="list-group">
+                            <a href="#" ng-repeat="obj in model.SocialStyles"
+                               ng-class="classes('SocialStyle', obj.Id)"
+                               ng-click="select('SocialStyle', obj.Id, $index);"
+                               class="list-group-item">
+                                <h4 class="list-group-item-heading" ng-bind="obj.Name"></h4>
+                            </a>
+                            <div class="list-group-item disabled">
+                                <p class="list-group-item-text" ng-bind-html="getDescription('SocialStyle')"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="">
+                        <div class="form-group">
+                            <input type="text" class="form-control" ng-model="report.Customer" placeholder="Hvem snakker du med?" />
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="4" ng-model="report.Message" placeholder="Skriv en kommentar.."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="reset" class="btn btn-link" ng-click="clear()">Reset</button>
+                            <button type="submit" class="btn btn-success pull-right" ng-disabled="personalities.length != 1" ng-click="submit()">Send</button>
+                        </div>
+                        <div ng-show="message._show" ng-class="message.classes" class="alert alert-succes" ng-bind="message.text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h5><strong>Seneste 10</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="body-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                @*<th></th>*@
+                                <th>#</th>
+                                <th>Type</th>
+                                <th>Kunde</th>
+                                <th>Navn</th>
+                                <th>Oprettet</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="min-height: 30px;" class="repeated-item"
+                                ng-repeat="report in reports | filter:search:false | orderBy:'CreateDate':true"
+                                ng-class="{danger: report.Trashed, info: report.UpdateDate != null}">
+                                @*<td>
+                                        <span data-toggle="tooltip" data-placement="top" title="Tooltip on top"><img class="img-responsive img-circle" ng-src="{{report.Personality.Url}}" /></span>
+                                    </td>*@
+                                <td><strong ng-bind="report.Personality.Type" style=" font-size: 2.9em; line-height: 1em;"></strong></td>
+                                <td class="col-md-4">
+                                    <span ng-bind="report.Personality.Name"></span>
+                                    <br />
+                                    <small class="text-muted" ng-bind="report.Message"></small>
+                                </td>
+                                <td ng-bind="report.Customer"></td>
+                                <td ng-bind="report.User.FullName"></td>
+                                <td><span ng-bind="report.CreateDate | fromNow"></span></td>
+                                <td>
+                                    <div class="dropdown pull-right" ng-controller="ReportActionsController">
+                                        <button class="btn btn-link" id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Actions
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel">
+                                            <li ng-if="!report.Trashed"><a ng-click="edit(report.Id, $index)"><span class="glyphicon glyphicon-edit"></span> Rediger</a></li>
+                                            <li ng-if="!report.Trashed"><a ng-click="trash(report.Id, $index)"><span class="glyphicon glyphicon-trash"></span> Slet</a></li>
+                                            <li ng-if="report.Trashed"><a ng-click="restore(report.Id, $index)"><span class="glyphicon glyphicon-refresh"></span> Gendan</a></li>
+                                            <li ng-if="isSuperuser && report.Trashed"><a href="#" ng-click="delete(report.Id, $index)"><span class="glyphicon glyphicon-remove"></span> Slet permanent</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

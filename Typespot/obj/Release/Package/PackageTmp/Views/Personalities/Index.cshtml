@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Typespot.Models.Personality>
+
+@{
+    ViewBag.Title = "Typer";
+}
+<div class="page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <p class="pull-right">
+          @Html.ActionLink("Create New", "Create")
+        </p>
+        <h2>Typer</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="body-content">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="row">
+          @foreach (var item in Model.OrderByDescending(p=>p.Type))
+          {
+            <div class="col-sm-6 col-md-6">
+              <div class="thumbnail">
+                <div class="caption">
+                  <h3>@Html.DisplayFor(modelItem => item.Type) @Html.DisplayFor(modelItem => item.Name)</h3>
+                  <p>@Html.Raw(item.Description)</p>
+                  <p class="text-muted">
+
+                    @Html.DisplayFor(modelItem => item.Center.Name) /
+                    @Html.DisplayFor(modelItem => item.HarmonicGroup.Name) /
+                    @Html.DisplayFor(modelItem => item.SocialStyle.Name) /
+                    @Html.DisplayFor(modelItem => item.Tonality.Name)
+                  </p>
+                  <p>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                  </p>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

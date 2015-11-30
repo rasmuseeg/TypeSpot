@@ -1,0 +1,89 @@
+﻿@model Typespot.Models.RegisterViewModel
+@{
+  ViewBag.Title = "Opret";
+
+  Html.EnableClientValidation();
+  Html.EnableUnobtrusiveJavaScript();
+}
+<div class="page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <p class="pull-right"></p>
+        <h2>@ViewBag.Title.</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="body-content">
+  <div class="container" ng-init="generatePassword = true;">
+    <div class="row">
+      <div class="col-xs-12">
+
+        <div class="alert alert-info"> <strong>OBS!</strong> Brugeren vil modtage en bekræftelses e-mail ved oprettelse.</div>
+
+        @using (Html.BeginForm("Create", "Users", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+          @Html.AntiForgeryToken()
+
+          @Html.ValidationSummary("", new { @class = "text-danger" })
+          <div class="form-group">
+            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+              @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            </div>
+          </div>
+                    <div class="form-group">
+                      @Html.LabelFor(m => m.FullName, new { @class = "col-md-2 control-label" })
+                      <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                      </div>
+                    </div>
+
+                    @* Generate password? *@
+
+                    <div class="form-group">
+
+                      <div class="col-md-10">
+                        <label form="@Html.IdFor(p=>p.GeneratePassword)" class="col-md-2 control-label">
+                        </label>
+                        <div class="checkbox col-md-10">
+                          <label>
+                            <input type="checkbox" ng-model="generatePassword" />
+                            <input type="hidden"  name="@Html.NameFor(m => m.GeneratePassword)" id="@Html.IdFor(p=>p.GeneratePassword)" value="{{generatePassword}}" />
+                            @Html.DisplayNameFor(m => m.GeneratePassword)
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div ng-if="!generatePassword">
+                      <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                          @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                          @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" class="btn btn-success" value="Opret" />
+                      </div>
+                    </div>
+        }
+
+        <p>
+          <span>
+            @Html.ActionLink("Tilbage til oversigt", "Index")
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

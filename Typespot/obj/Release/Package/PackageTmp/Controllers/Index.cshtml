@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Typespot.Models.ReportsByUser>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="page-header">
+    <div class="pull-right btn-group">
+        <a href="#"></a>
+    </div>
+    <h1>Spots <small>- Oversigt</small></h1>
+</div>
+
+<p>
+    <a class="btn btn-success" href="/Reports/Export?dateFrom=01-01-2015&dateTo=12-12-2015">Hent</a>
+</p>
+
+<p>
+    @Html.ActionLink( "Create New", "Create" )
+</p>
+
+@foreach( var panel in Model )
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>
+                <span href="#" class="" data-toggle="collapse" data-target="#@panel.User.Id">
+                    @if( !string.IsNullOrEmpty( panel.User.FullName ) )
+                    {
+                        @panel.User.FullName
+                    }
+                    else
+                    {
+                        @panel.User.Email
+                    }
+                </span>
+            </strong>
+            <span class="pull-right badge">@panel.Reports.Count()</span>
+        </div>
+        <div id="@panel.User.Id" class="collapse">
+            <table class="table table-hover">
+                <tbody>
+                    @foreach( var report in panel.Reports )
+                    {
+                        <tr>
+                            <td>
+                                <h4>@Html.DisplayFor( m => report.Personality.Type ) - @Html.DisplayFor( m => report.Personality.Name )</h4>
+                                <small>@report.Message</small>
+                            </td>
+                            <td>
+                                @if( !string.IsNullOrEmpty( report.Customer ) )
+                                {
+
+                                    <strong class="text-muted text-right text-uppercase">
+                                        <small style="font-size: .8em;">Kunde:</small><br />
+                                        @report.Customer
+                                    </strong>
+                                }
+                            </td>
+                            <td>
+                                <strong class="text-muted text-right text-uppercase">
+                                    <small style="font-size: .8em;">Oprettet:</small><br />
+                                    @Html.DisplayFor( m => report.CreateDate )<br />
+                                </strong>
+                            </td>
+                            <td>
+                                @if( report.UpdateDate.HasValue )
+                                {
+                                    <strong class="text-muted text-right text-uppercase">
+                                        <small style="font-size: .8em;">Redigeret:</small><br />
+                                        @Html.DisplayFor( m => report.UpdateDate.Value )
+                                    </strong>
+                                }
+                            </td>
+                            <td>
+                                <div class="pull-right btn-group btn-group-xs">
+                                    @Html.ActionLink( "Redigér", "Edit", new { id = report.Id }, new { @class = "btn btn-default" } )
+                                    @Html.ActionLink( "Detajler", "Details", new { id = report.Id }, new { @class = "btn btn-default" } )
+                                    @Html.ActionLink( "Slet", "Delete", new { id = report.Id }, new { @class = "btn btn-default" } )
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

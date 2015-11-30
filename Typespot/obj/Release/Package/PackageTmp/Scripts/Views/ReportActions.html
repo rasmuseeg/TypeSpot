@@ -1,0 +1,13 @@
+﻿<div class="dropdown">
+    <button class="btn btn-link" id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Action
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel">
+        <li ng-if="!report.Trashed"><a href="#" ng-click="edit(report.Id, $index)" data-toggle="tooltip" data-placement="top" title="Rediger" data-selector="body"><span class="glyphicon glyphicon-edit"></span> Rediger</a></li>
+        <li ng-if="!report.Trashed"><a href="#" ng-click="trash(report.Id, $index)" data-toggle="tooltip" data-placement="top" title="Slet" data-selector="body"><span class="glyphicon glyphicon-trash"></span> Slet</a></li>
+        <li ng-if="report.Trashed"><a href="#" ng-click="restore(report.Id, $index)" data-toggle="tooltip" data-placement="top" title="Gendan" data-selector="body"><span class="glyphicon glyphicon-refresh"></span> Gendan</a></li>
+        <li ng-if="isSuperuser && report.Trashed"><a href="#" ng-click="delete(report.Id, $index)" data-toggle="tooltip" data-placement="top" title="Slet permanent" data-selector="body"><span class="glyphicon glyphicon-remove"></span> Slet permanent</a></li>
+    </ul>
+</div>
+

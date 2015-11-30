@@ -1,0 +1,4 @@
+﻿@model HttpPostedFileBase
+@*<button id="btn-@Html.IdFor(model => Model)" type="button" class="btn btn-success">Vælg billede</button>*@
+@*<upload data-accept="image/*" data-id="@Html.IdFor(model => Model)" data-target="#btn-@Html.IdFor(model => Model)" data-name="@Html.NameFor(model => Model)"></upload>*@
+<input type="file" accept="image/*" class="btn btn-default" id="@Html.IdFor(model => Model)" name="@Html.NameFor(model => Model)" />

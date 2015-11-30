@@ -1,0 +1,8 @@
+﻿@model string
+@if (!String.IsNullOrEmpty(Model)) { 
+<img src="@Model" class="img-thumbnail" />
+}
+else
+{
+  <img src="//placehold.it/150" class="img-thumbnail" />
+}

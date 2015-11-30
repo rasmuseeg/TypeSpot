@@ -1,0 +1,22 @@
+﻿@model Typespot.Models.Tonality
+
+@{
+  Layout = "_Layout.cshtml";
+}
+
+<div class="page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h2>@ViewBag.Title <small>@ViewBag.Small</small></h2>
+        @RenderSection("PageHeader", required: false)
+      </div>
+    </div>
+  </div>
+</div>
+
+@RenderBody()
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

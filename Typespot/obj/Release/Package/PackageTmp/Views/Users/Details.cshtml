@@ -1,0 +1,95 @@
+﻿@model Typespot.Models.UserIndexViewModel
+
+@{
+  ViewBag.Title = "Reports for ";
+}
+
+
+<div class="page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <div class="media">
+          <div class="media-left">
+            @if (!String.IsNullOrEmpty(Model.User.ImageUrl))
+            {
+              <img src="@(Model.User.ImageUrl)?width=48&height=48&mode=crop" class="img-circle img-avatar media-object" />
+            }
+            else
+            {
+              <img src="//gravatar.com/avatar/@Model.User.GravatarHash?s=48" class="img-circle img-avatar media-object" />
+            }
+          </div>
+          <div class="media-body">
+            <h2 class="no-margin">@Model.User.FullName</h2>
+            <span class="text-muted"><a href="mailto:@Model.User.Email">@Model.User.Email</a></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        @if (User.IsInRole("Superusers"))
+        {
+          <p class="pull-right">
+            <div class="dropdown pull-right">
+              <a class="btn btn-default" data-toggle="dropdown">
+                Muligheder
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="@Url.Action("Edit", "Users", new { id=Model.User.Id } )">Redigér</a></li>
+                <li class="divider"></li>
+                <li><a href="@Url.Action("Delete", "Users", new { id=Model.User.Id })" class="">Slet permanent?</a></li>
+              </ul>
+            </div>
+          </p>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="body-content">
+  <div class="container">
+    <div class="row">
+      <!-- Push pull reverse -->
+      <div class="col-xs-4 col-md-4 col-md-push-8">
+        <p>
+          Total rapporter: @Model.TotalReports
+        </p>
+        <p>
+          Låst ude: @(Model.User.LockoutEnabled ? "Ja" : "Nej")
+        </p>
+      </div>
+
+
+      <div class="col-xs-12 col-md-8 col-md-pull-4">
+        @foreach (var day in Model.Reports)
+        {
+          <div class="row user-day">
+            <div class="col-xs-12">
+              <h4 class="text-capitalize">
+                @day.Date.ToString("MMMM dd.")
+              <small class="pull-right">Rapporter: @day.Reports.Count()</small>
+            </h4>
+            <hr />
+            @foreach (var report in day.Reports)
+            {
+              <div class="media">
+                <div class="media-left">
+                  <span class="text-muted">@report.CreateDate.ToString("HH:mm")</span>
+
+                </div>
+                <div class="media-body">
+                  <strong>@report.Personality.Type - @report.Personality.Name</strong>
+                  <p>@report.Message</p>
+                </div>
+              </div>
+            }
+            <br /><br />
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

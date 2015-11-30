@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Typespot.Models.Tonality>
+
+@{
+    ViewBag.Title = "Tonaliteter";
+}
+
+<div class="page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <p class="pull-right">
+          <a href="@Url.Action("Create")" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span> Opret</a>
+        </p>
+        <h2>@ViewBag.Title <small> - Oversigt</small></h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="body-content">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <table class="table">
+          <tr>
+            <th>
+              @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+              @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+          </tr>
+
+          @foreach (var item in Model)
+          {
+            <tr>
+              <td>
+                @Html.DisplayFor(modelItem => item.Name)
+              </td>
+              <td>
+                @Html.Raw(item.Description)
+              </td>
+              <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+              </td>
+            </tr>
+          }
+
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
